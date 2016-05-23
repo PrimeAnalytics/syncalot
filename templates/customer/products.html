@@ -1,0 +1,153 @@
+{% extends "CustomerBase.html" %}
+{% load staticfiles %}
+{% block content %}
+    <section class="demo-hero-5" style="height: 200px!important; margin-top: 70px!important">
+        <div class="container-xs-height full-height">
+            <div class="col-xs-height col-middle text-center">
+                <h1 class="inner p-b-50 m-b-20">Add Your Products</h1>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <button class="btn btn-primary btn-lg pull-right" data-toggle="modal" data-target="#AddProductModal">
+            Add Product
+        </button>
+        <div class='clearfix'></div>
+
+        <div class="modal fade fill-in" id="AddProductModal" tabindex="-1" role="dialog"
+             aria-labelledby="modalFillInLabel"
+             aria-hidden="true">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="pg-close"></i>
+            </button>
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="text-left p-b-5"><span class="semi-bold">Create</span> New Product</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/products/new" method="post">
+
+                            <div class="row">
+                                {% csrf_token %}
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Name" name="name" class="form-control input-lg">
+                                </div>
+
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Product Code" class="form-control input-lg"
+                                           name="product_code">
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Category" name="category"
+                                           class="form-control input-lg">
+                                </div>
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Brand" name="brand" class="form-control input-lg">
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-large fs-15">Create</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade fill-in" id="AddProductUrlModal" tabindex="-1" role="dialog"
+             aria-labelledby="modalFillInLabel"
+             aria-hidden="true">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="pg-close"></i>
+            </button>
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="text-left p-b-5"><span class="semi-bold">Add</span> New Comparison</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/product_url/new" method="post">
+                            <div class="row">
+                                {% csrf_token %}
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Url" name="url" class="form-control input-lg">
+                                </div>
+                                <input type="hidden" id="product_code" name="product_code">
+
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-large fs-15">Create</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+        <h3>Products:</h3>
+
+        {% if object_list %}
+            <div class="panel panel-group panel-transparent" data-toggle="collapse" id=
+                    "accordion">
+
+                {% for product in object_list %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="collapsed" data-parent="#accordion" data-toggle=
+                                        "collapse" href="#collapse{{ product.product_code }}">{{ product.name }}</a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="collapse{{ product.product_code }}">
+                            <div class="panel-body">
+                                <h4>{{ product.brand }} - {{ product.category }} - {{ product.product_code }}</h4>
+                                <button class="btn btn-complete pull-right" data-toggle="modal"
+                                        data-target="#AddProductUrlModal"
+                                        onclick="setProductCode('{{ product.product_code }}');">
+                                    Add Comparison
+                                </button>
+                                <table width="100%">
+                                <thead>
+                                <tr><th width="40%">URL</th><th width="30%">Name</th><th width="30%">Price</th></tr>
+                                </thead>
+                                    {% for product_url in product.producturl_set.all %}
+
+                                        <tr>
+                                            <td>{{ product_url.url|truncatechars:30 }}</td>
+                                            <td>{{ product_url.name }}</td>
+                                            <td>{{ product_url.price }}</td>
+                                        </tr>
+
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+        {% else %}
+            <strong>There are no products in your database.</strong>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function setProductCode(id) {
+            $("#product_code").val(id);
+        }
+    </script>
+{% endblock %}

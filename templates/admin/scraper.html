@@ -1,0 +1,103 @@
+{% extends "CustomerBase.html" %}
+{% load staticfiles %}
+{% block content %}
+    <section class="demo-hero-5" style="height: 200px!important; margin-top: 70px!important">
+        <div class="container-xs-height full-height">
+            <div class="col-xs-height col-middle text-center">
+                <h1 class="inner p-b-50 m-b-20">Scrapers</h1>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+
+        <button class="btn btn-primary btn-lg pull-right" data-toggle="modal" data-target="#AddScraperModal">
+            Add Scraper
+        </button>
+        <div class='clearfix'></div>
+        <h3>Scrapers:</h3>
+        <div class="modal fade fill-in" id="AddScraperModal" tabindex="-1" role="dialog"
+             aria-labelledby="modalFillInLabel"
+             aria-hidden="true">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="pg-close"></i>
+            </button>
+            <div class="modal-dialog ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="text-left p-b-5"><span class="semi-bold">Create</span> New Scraper</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/scraper/new" method="post">
+
+                            <div class="row">
+                                {% csrf_token %}
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Host" name="host" class="form-control input-lg">
+                                </div>
+
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Extractor Id" class="form-control input-lg"
+                                           name="import_io_extractor_id">
+                                </div>
+
+                                <div class="col-md-9">
+                                    <input type="text" placeholder="Api Key" class="form-control input-lg"
+                                           name="import_io_api_key">
+                                </div>
+
+                                <div class="col-md-3 text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-large fs-15">Create</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        {% if object_list %}
+            <div class="panel panel-group panel-transparent" data-toggle="collapse" id=
+                    "accordion">
+                {% for idx,scraper in object_list %}
+                    <div class="panel panel-default" >
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="collapsed" data-parent="#accordion" data-toggle=
+                                        "collapse" href="#collapse{{ idx }}">{{ scraper.host }}</a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="collapse{{ idx }}">
+                            <div class="panel-body">
+                                <button class="btn btn-warning pull-right" data-toggle="modal"
+                                        data-target="#AddProductUrlModal">
+                                    Edit
+                                </button>
+                                <table >
+                                    <tr>
+                                        <th>Host</th>
+                                        <td>{{ scraper.host }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Extractor Id</th>
+                                        <td>{{ scraper.import_io_extractor_id|truncatechars:30 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th style="width:250px">Api Key</th>
+                                        <td>{{ scraper.import_io_api_key|truncatechars:30 }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <strong>There are no scrapers in your database.</strong>
+        {% endif %}
+    </div>
+{% endblock %}

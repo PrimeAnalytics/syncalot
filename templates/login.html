@@ -1,0 +1,31 @@
+{% extends "Base.html" %}
+
+{% block content %}
+    <section class="demo-hero-5" style="height: 200px!important; margin-top: 70px!important">
+        <div class="container-xs-height full-height">
+            <div class="col-xs-height col-middle text-center">
+                <h1 class="inner p-b-50 m-b-20">Login</h1>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <form method="post" class="pull-center-inner" style="min-width: 350px" action="{% url 'django.contrib.auth.views.login' %}">
+            {% if form.errors %}
+            <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+            {% csrf_token %}
+            <div class="form-group form-group-default">
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="form-group form-group-default">
+                <label>Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+
+            <input type="submit" class="pull-right" value="login"/>
+            <input type="hidden" name="next" value="/products"/>
+        </form>
+    </div>
+
+{% endblock %}

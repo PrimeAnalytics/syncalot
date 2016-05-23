@@ -1,0 +1,96 @@
+{% extends "CustomerBase.html" %}
+{% load staticfiles %}
+{% block content %}
+    <section class="demo-hero-5" style="height: 200px!important; margin-top: 70px!important">
+        <div class="container-xs-height full-height">
+            <div class="col-xs-height col-middle text-center">
+                <h1 class="inner p-b-50 m-b-20">Dashboard</h1>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div class="col-md-12">
+            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="piecontainer" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+        </div>
+        <div class="col-lg-6">
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        $(function () {
+            $('#container').highcharts({
+                chart: {
+                    type: 'area',
+                    zoomType: "xy"
+                },
+                xAxis: {
+                    type: 'category',
+                },
+                title: {
+                    text: 'Price index vs products'
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Price Index',
+                    data: [
+                        {% for product in data %}
+                            ('{{ product.product_code }}', {{ product.avg_price }}),
+                        {% endfor %}
+                    ]
+                }]
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#piecontainer').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Percentage of prices the lowest'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: [
+                        {% for host in product_data %}
+                            {
+                                name: '{{ host.host }}',
+                                y: {{ host.price }}
+                            },
+                        {% endfor %}
+                    ]
+                }]
+            });
+        });
+    </script>
+
+{% endblock %}
