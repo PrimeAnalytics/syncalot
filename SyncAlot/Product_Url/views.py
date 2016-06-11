@@ -8,7 +8,7 @@ class ProductUrlForm(ModelForm):
     class Meta:
         model = ProductUrl
         fields = ['url', 'product_code']
-
+dffds
 
 def product_url_create(request):
     post_values = request.POST.copy()
