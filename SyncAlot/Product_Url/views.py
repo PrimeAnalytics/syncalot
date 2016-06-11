@@ -10,6 +10,8 @@ class ProductUrlForm(ModelForm):
         fields = ['url', 'product_code']
 dffds
 
+
+hfjhdsfhj
 def product_url_create(request):
     post_values = request.POST.copy()
     form = ProductUrlForm(post_values)
